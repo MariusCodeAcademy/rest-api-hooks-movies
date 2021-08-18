@@ -6,21 +6,27 @@ import "./App.css";
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [movieError, setMovieError] = useState(null);
 
   async function fetchMoviesHandler() {
     setIsLoading(true);
-    const { data } = await axios.get("https://swapi.dev/api/films");
-
-    // perdaryti duomenis i mums rekalingastruktura
-    const moviesTransformed = data.results.map((mv) => {
-      return {
-        id: mv.episode_id,
-        title: mv.title,
-        openingText: mv.opening_crawl,
-        releaseDate: mv.release_date,
-      };
-    });
-    setMovies(moviesTransformed);
+    setMovieError(false);
+    try {
+      const { data } = await axios.get("https://swapi.dev/api/film");
+      // perdaryti duomenis i mums rekalingastruktura
+      const moviesTransformed = data.results.map((mv) => {
+        return {
+          id: mv.episode_id,
+          title: mv.title,
+          openingText: mv.opening_crawl,
+          releaseDate: mv.release_date,
+        };
+      });
+      setMovies(moviesTransformed);
+    } catch (error) {
+      console.log(error.message);
+      setMovieError(error.message);
+    }
     setIsLoading(false);
   }
 
