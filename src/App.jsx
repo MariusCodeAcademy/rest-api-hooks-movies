@@ -36,7 +36,14 @@ function App() {
   }, []);
 
   // panaudoti kintamaji arba funkcija ir atvaizduoti klaidas arba loading arba ka reikia
-
+  let content = false ? <p>True</p> : <p>False</p>;
+  const showContent = () => {
+    if (!isLoading && movies.length > 0) return <MoviesList movies={movies} />;
+    if (!isLoading && movies.length === 0 && !movieError)
+      return <p>No movies at the moment </p>;
+    if (movieError) return <p>{movieError}</p>;
+    if (isLoading) return <p>Loading ...</p>;
+  };
   return (
     <React.Fragment>
       <section>
@@ -44,14 +51,7 @@ function App() {
           {isLoading ? "Loading" : "Fetch Movies"}
         </button>
       </section>
-      <section>
-        {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
-        {!isLoading && movies.length === 0 && !movieError && (
-          <p>No movies at the moment </p>
-        )}
-        {movieError && <p>{movieError}</p>}
-        {isLoading && <p>Loading ...</p>}
-      </section>
+      <section>{showContent()}</section>
     </React.Fragment>
   );
 }
