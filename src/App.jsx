@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MoviesList from "./components/MoviesList";
 import "./App.css";
@@ -12,7 +12,7 @@ function App() {
     setIsLoading(true);
     setMovieError(false);
     try {
-      const { data } = await axios.get("https://swapi.dev/api/film");
+      const { data } = await axios.get("https://swapi.dev/api/films");
       // perdaryti duomenis i mums rekalingastruktura
       const moviesTransformed = data.results.map((mv) => {
         return {
@@ -29,6 +29,13 @@ function App() {
     }
     setIsLoading(false);
   }
+  // componentDidMount()
+  useEffect(() => {
+    console.log("useEffect ran");
+    fetchMoviesHandler();
+  }, []);
+
+  // panaudoti kintamaji arba funkcija ir atvaizduoti klaidas arba loading arba ka reikia
 
   return (
     <React.Fragment>
@@ -39,7 +46,10 @@ function App() {
       </section>
       <section>
         {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
-        {!isLoading && movies.length === 0 && <p>No movies at the moment </p>}
+        {!isLoading && movies.length === 0 && !movieError && (
+          <p>No movies at the moment </p>
+        )}
+        {movieError && <p>{movieError}</p>}
         {isLoading && <p>Loading ...</p>}
       </section>
     </React.Fragment>
